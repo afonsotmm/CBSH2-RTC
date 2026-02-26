@@ -568,7 +568,12 @@ void CBS::updateFocalList()
 void CBS::printResults() const
 {
 	if (solution_cost >= 0) // solved
-		cout << "Optimal,";
+	{
+		if (focal_w > 1.0)
+			cout << "Bounded-suboptimal (w=" << focal_w << "),";
+		else
+			cout << "Optimal,";
+	}
 	else if (solution_cost == -1) // time_out
 		cout << "Timeout,";
 	else if (solution_cost == -2) // no solution
@@ -707,6 +712,8 @@ void CBS::printConflicts(const CBSNode &curr)
 string CBS::getSolverName() const
 {
 	string name;
+	if (focal_w > 1.0)
+		name += "ECBS(w=" + std::to_string(focal_w).substr(0, 4) + ") ";
 	if (disjoint_splitting)
 		name += "Disjoint ";
 	switch (heuristic_helper.type)

@@ -51,6 +51,7 @@ int main(int argc, char** argv)
 		("targetReasoning", po::value<bool>()->default_value(true), "Using target reasoning")
 		("restart", po::value<int>()->default_value(1), "number of restart times (at least 1)")
 		("sipp", po::value<bool>()->default_value(false), "using sipp as the single agent solver")
+		("suboptimality,w", po::value<double>()->default_value(1.0), "suboptimality bound for ECBS (1.0 = optimal CBS, >1.0 = bounded-suboptimal ECBS)")
 		;
 
 	po::variables_map vm;
@@ -144,6 +145,7 @@ int main(int argc, char** argv)
 	cbs.setMutexReasoning(vm["mutexReasoning"].as<bool>());
 	cbs.setSavingStats(vm["stats"].as<bool>());
 	cbs.setNodeLimit(vm["nodeLimit"].as<int>());
+	cbs.setFocalWeight(vm["suboptimality"].as<double>());
 
 
 	//////////////////////////////////////////////////////////////////////

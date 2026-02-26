@@ -4,6 +4,13 @@ var cnt = 0 ;
 function readMap(file) {
   var reader = new FileReader();
   
+  // Reset variables for new map
+  map = "";
+  map_h = 0;
+  map_w = 0;
+  paths = [];
+  cnt = 0;
+  
   reader.onload = function(e) {
     var contents = e.target.result;
     if(contents[0] == 't'){
@@ -67,31 +74,41 @@ var canvas ;
 var context ;
 var canvas_width , canvas_height ;
 var width , height ;
-// 示例用法
+
 function loadMap(){
     canvas = document.getElementById('myCanvas');
+    var canvas1 = document.getElementById('myCanvas1');
     context = canvas.getContext('2d');
-    canvas_width = canvas.width , canvas_height = canvas.height;
+    
+    // Dynamically adjust canvas size based on map dimensions
+    var cellSize = Math.max(8, Math.min(15, Math.floor(1400 / Math.max(map_w, map_h))));
+    canvas_width = map_w * cellSize;
+    canvas_height = map_h * cellSize;
+    
+    canvas.width = canvas_width;
+    canvas.height = canvas_height;
+    canvas1.width = canvas_width;
+    canvas1.height = canvas_height;
 
-    width = canvas_width / map_w ;
-    height = canvas_height / map_h ;
-    for (let i = 0; i < map_w ; i++) {
-        for(let j = 0 ; j < map_h ; j++){
-            let x = j * width;
-            let y = i * height;
-            //console.log(map[i*map_w + j]) ;
-            if(map[i*map_w + j] == '.'){
+    width = cellSize;
+    height = cellSize;
+    // i = row (0 to map_h), j = column (0 to map_w)
+    for (let i = 0; i < map_h ; i++) {
+        for(let j = 0 ; j < map_w ; j++){
+            let x = j * width;   // column -> x position
+            let y = i * height;  // row -> y position
+            let idx = i * map_w + j;
+            if(map[idx] == '.'){
                 context.fillStyle = 'grey';
-            }else if(map[i*map_w + j] == '@'){
+            }else if(map[idx] == '@'){
                 context.fillStyle = 'black';
-            }else if(map[i*map_w + j] == 'T'){
+            }else if(map[idx] == 'T'){
                 context.fillStyle = 'olive';
             }else{
                 continue ;
             }
             context.fillRect(x, y, 0.95*width, 0.95*height);
         }   
-            
     } 
 }
 var canvas1 ;
@@ -125,10 +142,14 @@ function solve(j){
 function draw(){
     canvas1 = document.getElementById('myCanvas1');
     context1 = canvas1.getContext('2d');
+    // Reset paths counter when loading new paths
+    cnt = 0;
     var max_len = 0 ;
     for(let i = 0 ; i < paths.length ; i ++){
         max_len = Math.max(max_len , paths[i].length) ;
     }
+    // Draw initial positions
+    solve(0);
 }
   
 function handleFileSelect(event) {

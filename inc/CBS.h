@@ -56,6 +56,7 @@ public:
 	void setBypass(bool b) { bypass = b; } // 2-agent solver for heuristic calculation does not need bypass strategy.
 	void setNodeLimit(int n) { node_limit = n; }
 	void setSavingStats(bool s) { save_stats = s; heuristic_helper.save_stats = s; }
+	void setFocalWeight(double w) { focal_w = w; }
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Runs the algorithm until the problem is solved or time is exhausted 
